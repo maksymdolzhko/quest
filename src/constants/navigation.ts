@@ -1,3 +1,4 @@
+
 export const navigation = [
     { name: 'Quests', href: '/' },
     { name: 'Begin', href: '/begin' },
