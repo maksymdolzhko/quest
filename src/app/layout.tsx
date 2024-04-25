@@ -1,28 +1,25 @@
 import "./globals.css";
-import Header from "@/components/header";
 import Footer from "@/components/footer";
 import { Inter } from "next/font/google";
 import { ClipPathTop, ClipPathBottom } from "@/components/clip";
-
+import { CookiesProvider } from "next-client-cookies/server";
 interface Props {
   children: React.ReactNode;
 }
 
 const inter = Inter({
-  subsets: ["latin"]
+  subsets: ["latin"],
 });
 
 export default function RootLayout({ children }: Readonly<Props>) {
   return (
-    <html lang="en" className="bg-[#1C1C1C]">
+    <html lang="en" className="bg-dark-grey">
       <body className={`${inter.className} min-h-screen flex flex-col`}>
-        <Header />
-        <ClipPathTop />
-        <main className="relative overflow-hidden flex-1 pt-14">
-          {children}
-          <Footer/>
+        <main className="relative overflow-hidden flex-1 pt-24 pb-24">
+          <CookiesProvider>{children}</CookiesProvider>
+          <ClipPathBottom />
+          <Footer />
         </main>
-        <ClipPathBottom />
       </body>
     </html>
   );

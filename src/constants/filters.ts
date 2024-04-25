@@ -1,6 +1,9 @@
-export const filtersList = [
+
+export type TFilterType = | 'all' | 'adventures' | 'mystic' | 'horror' | 'detective' | 'sci-fi';
+
+export const filtersList: {id: TFilterType, title: string }[] = [
     {
-        id: 'all',
+        id: "all",
         title: 'All games',
     },
     {

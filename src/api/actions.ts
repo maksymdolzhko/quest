@@ -1,25 +1,24 @@
 "use server";
 
-import { RType } from "@/schema/schema-registration";
+import type { TFilterType } from "@/constants/filters";
+import type { RType } from "@/schema/schema-registration";
+import { ListQuestItem } from "@/types";
 
-type TType = "adventures" | "mystic" | "horror" | "detective" | "sci-fi";
-interface Props {
-  id?: number;
-  type?: TType;
-}
-
-export async function getQuests(param?: Props) {
+export async function getQuests(param?: { id?: number; type?: TFilterType }) {
   const byAll = !param && "/quests";
   const byId = param && param.id && `/quests/${param.id}`;
   const byType = param && param.type && `/quests?type=${param.type}`;
   const url = !byType ? (!byId ? byAll : byId) : byType;
 
   try {
-    const response = await fetch(`http://localhost:3001${url}`, {
+    const response = await fetch(`${process.env.API_BASE_PATH}${url}`, {
       method: "GET",
+      cache: 'no-store',
     });
 
-    return response.json();
+    const data: ListQuestItem[] = await response.json();
+
+    return data;
   } catch (error: unknown) {
     if (error instanceof Error) {
       return { error: error.message };
@@ -29,28 +28,24 @@ export async function getQuests(param?: Props) {
   }
 }
 
-
 export async function registration(data: FormData) {
-  "use server";
-
   const bodyData = {
-    name: data.get('name'),
-    phone: data.get('phone'),
-    peopleCount: Number(data.get('peopleCount')),
-    isLegal: data.has('isLegal'),
+    name: data.get("name"),
+    phone: data.get("phone"),
+    peopleCount: Number(data.get("peopleCount")),
+    isLegal: data.has("isLegal"),
   } as RType;
 
   try {
-    const response = await fetch(`http://localhost:3001/orders`, {
+    const response = await fetch(`${process.env.API_BASE_PATH}/orders`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(bodyData),
     });
-    const res = await response.json()
-    return  res;
-
+    const res = await response.json();
+    return res;
   } catch (error: unknown) {
     if (error instanceof Error) {
       return { error: error.message };

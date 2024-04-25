@@ -1,21 +1,23 @@
-import { NextResponse, userAgent } from "next/server";
-import type { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { cookies } from 'next/headers';
+
+const publicRoutes = ['/ua/sign-in', '/ua/sign-up'];
 
 export function middleware(request: NextRequest) {
-  // const {device} = userAgent(request);
-  // console.log('device', device.type) // undefined
+  const path = request.nextUrl.pathname;
+  const isProtectedRoute = publicRoutes.includes(path);
+  const isAuth = request.cookies.get('isAuth')?.value;
 
-  const url = request.nextUrl;
-  url.searchParams.set("lng", "en");
+  // console.log('request:::' , request);
+  // console.log('middleware:::' , path, isProtectedRoute, isAuth);
 
-  const requestHeaders = new Headers(request.headers);
-  //  requestHeaders.set('Content-Type', 'application/json');
+  if (!isProtectedRoute && !isAuth) {
+      return NextResponse.redirect(new URL('/ua/sign-in', request.nextUrl));
+  }
 
-  const response = NextResponse.next({
-    request: {
-      headers: requestHeaders,
-    },
-  });
-
-  return NextResponse.rewrite(url);
+  return NextResponse.next();
 }
+
+export const config = {
+  matcher: ['/((?!api|_next/static|_next/image|.*\\.png$|.*\\.svg$).*)'],
+};

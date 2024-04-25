@@ -1,20 +1,19 @@
-import List from "./list";
-import Filters from "./filters";
+import { List } from "./list";
+import { Filters } from "./filters";
 import { ListQuestItem } from "@/types";
+import { TFilterType } from "@/constants/filters";
 
 interface Props {
-    type?: string;
-    data: ListQuestItem[];
+  type?: TFilterType;
+  data: ListQuestItem[] | {
+    error: string;
+};
 }
-export default function QuestList({type, data}: Props) {
-    return (
-        <>
-            <Filters
-                type={type}
-            />
-            <List
-                filteredData={data}
-            />
-        </>
-    )
+export default function QuestList({ type, data }: Props) {
+  return (
+    <>
+      <Filters type={type} />
+      <List data={data} />
+    </>
+  );
 }

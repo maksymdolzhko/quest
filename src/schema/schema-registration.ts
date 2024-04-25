@@ -20,4 +20,4 @@ export const RegistrationSchema = z.object({
         .boolean(),
 });
 
-export type RType = z.infer<typeof RegistrationSchema>
+export type RType = z.infer<typeof RegistrationSchema>;
