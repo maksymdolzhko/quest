@@ -1,16 +1,18 @@
 "use client";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { useFormState } from "react-dom";
 import { signIn } from "@/api/db/auth";
 import { SignInSchema } from "@/schema/schema-signin";
 import { useRouter } from "next/navigation";
-import { User } from "@prisma/client";
+import { useTranslation } from "react-i18next";
 import InvalidInput from "./invalidInput";
 
 const invalidStyle =
   "text-red-900 ring-red-300 placeholder:text-red-300 focus:ring-red-500";
 
 export default function SignInForm() {
+  const { t } = useTranslation();
+
   const ref = useRef<HTMLFormElement>(null);
   const router = useRouter();
   const initialState = {
@@ -39,9 +41,9 @@ export default function SignInForm() {
     ref.current?.reset();
 
     if (result.data?.id) {
-      router.push("/ua");
+      router.push("/");
     }
-    
+
     return result;
   };
 
@@ -54,7 +56,7 @@ export default function SignInForm() {
         {message && <InvalidInput field={message} />}
         <div className="relative mb-4">
           <label htmlFor="email" className="sr-only">
-            Email
+          {t("email")}
           </label>
           <input
             type="text"
@@ -73,7 +75,7 @@ export default function SignInForm() {
 
         <div className="relative mb-4">
           <label htmlFor="password" className="sr-only">
-            Password
+          {t("password")}
           </label>
           <input
             type="text"
@@ -94,7 +96,7 @@ export default function SignInForm() {
           type="submit"
           className="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
         >
-          Sign in
+          {t("signin")}
         </button>
       </form>
     </>
