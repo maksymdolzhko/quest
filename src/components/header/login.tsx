@@ -6,6 +6,10 @@ import { logout } from "@/api/db/auth";
 import Link from "next/link";
 import router from "next/router";
 import { cookies } from "next/headers";
+import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
+import { useTranslation } from "react-i18next";
+import {i18nConfig} from "../../../i18nConfig";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -14,16 +18,41 @@ function classNames(...classes: string[]) {
 export default function LoginDropdown() {
   const cookies = useCookies();
   const isAuth = cookies.get("isAuth");
+  const router = useRouter();
+  const pathname = usePathname();
+  
+  const handleChangeLocale = (newLocale: string) => {
+    // set cookie for next-i18n-router
+    const days = 30;
+    const date = new Date();
+    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+    // document.cookie = `NEXT_LOCALE=${newLocale};expires=${date.toUTCString()};path=/`;
 
+    // if (
+    //   currentLocale === i18nConfig.defaultLocale &&
+    //   !i18nConfig.prefixDefault
+    // ) {
+    //   console.log('newLocale1 ::::::', "/", newLocale,'/', pathname,'/',)
+    //   // router.push("/" + newLocale + pathname);
+    // } else {
+    //   console.log('newLocale2 ::::::', `/${currentLocale}`, `/${newLocale}`)
+    //   // router.push(
+    //   //   pathname.replace(`/${currentLocale}`, `/${newLocale}`)
+    //   // );
+    // }
+
+    router.refresh();
+  }
   const handlerLogout = async () => {
-    const user = await logout();
-    if(user){
-      router.push("/ua");
-    }
+    // const user = await logout();
+    // if(user){
+    //   router.push("/ua");
+    // }
 
-    // cookies.remove("isAuth");
-    // cookies.remove("user");
-    // router.push("/ua");
+    cookies.remove("isAuth");
+    cookies.remove("user");
+    router.push("/");
+    router.refresh();
    }
  
   return (
@@ -48,28 +77,28 @@ export default function LoginDropdown() {
           <div className="py-1">
             <Menu.Item>
               {({ active }) => (
-                <Link
-                  href='/ua/sing-up'
+                <div
+                onClick={()=>handleChangeLocale('en')}
                   className={classNames(
                     active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                     'block px-4 py-2 text-sm'
                   )}
                 >
                   EN
-                </Link>
+                </div>
               )}
             </Menu.Item>
             <Menu.Item>
               {({ active }) => (
-                <Link
-                  href='/ua/sing-up'
+                <div
+                onClick={()=>handleChangeLocale('ua')}
                   className={classNames(
                     active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                     'block px-4 py-2 text-sm'
                   )}
                 >
                   UA
-                </Link>
+                </div>
               )}
             </Menu.Item>
             <Menu.Item>

@@ -3,6 +3,8 @@ import { getQuestsByType } from "@/api/db/quests";
 import { PageTitle } from "@/constants/content";
 import type { Metadata } from "next/types";
 import type { TFilterType } from "@/constants/filters";
+import initTranslations from "@/app/i18n";
+import { i18nNamespaces } from "@/constants/namespaces";
 
 interface Props {
   params: {
@@ -17,7 +19,8 @@ export const metadata: Metadata = {
 };
 
 export default async function Type({ params: { locale, type } }: Props) {
-  console.log('{ locale, type } ====',{ locale, type });
+  const { t, resources } = await initTranslations(locale, i18nNamespaces);
+
   const data = await getQuestsByType( type );
   return (
     <div className="text-left flex flex-col gap-6">
